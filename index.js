@@ -1,11 +1,11 @@
 const app = require("express")();
 const puppeteer=require("puppeteer")
-const cheerio = require("cheerio")
-const { default: axios } = require("axios");
-var cors = require('cors');
-const upload = require("express-fileupload")
-app.use(cors())
-app.use(upload())
+/* const cheerio = require("cheerio") */
+/* const { default: axios } = require("axios"); */
+/* var cors = require('cors');
+const upload = require("express-fileupload") */
+/* app.use(cors())
+app.use(upload()) */
 let chrome = {};
 let puppeteer;
 
@@ -188,10 +188,6 @@ app.post("/api", async (req, res) => {
     console.error(err);
     return null;
   }
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started");
 });
 
 

@@ -27,8 +27,10 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
+    await page.goto("https://www.cazoo.co.uk");
+    await page.waitForSelector("nav")
+    var exp = await page.$eval("nav", (el)=>el.innerHTML)
+    res.send(exp);
   } catch (err) {
     console.error(err);
     return null;
@@ -40,3 +42,21 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 module.exports = app;
+/* app.post('/category', async (req,res)=>{
+  try{
+  console.log("test");
+const browser = await puppeteer.launch({ headless:true,args:['--no-sandbox']});
+const page = await browser.newPage();
+var page2='#page-heading'
+await page.goto(req.body.pages);
+await page.waitForSelector(page2)
+var exp=await page.$eval(page2, (el)=>el.innerHTML)
+await browser.close();
+res.status(200).send(exp)
+}catch(err){
+  console.log("test2");
+  const browser = await puppeteer.launch({
+      headless:true,args:['--no-sandbox']
+});
+}
+}) */

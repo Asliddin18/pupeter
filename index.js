@@ -10,7 +10,7 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   puppeteer = require("puppeteer");
 }
 
-app.post("/api", async (req, res) => {
+app.get("/api", async (req, res) => {
   let options = {};
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
@@ -26,8 +26,8 @@ app.post("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.diamondsfactory.com/design/yellow-gold-heart-halo-diamond-engagement-ring-clrn27109");
-    await page.waitForSelector(req.body.pages)
+    await page.goto(req.body.pages);
+    await page.waitForSelector("#prodImgdiv1")
     var exp = await page.$eval("#prodImgdiv1" , (el)=>el.innerHTML)
     res.status(200).send(exp)
   } catch (err) {

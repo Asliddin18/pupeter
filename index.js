@@ -27,9 +27,9 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.cazoo.co.uk");
-    await page.waitForSelector("nav")
-    var exp = await page.$eval("nav", (el)=>el.innerHTML)
+    await page.goto("https://www.diamondsfactory.com/design/white-gold-round-diamond-engagement-ring-clrn34901");
+    await page.waitForSelector("#prodImgdiv1 > div")
+    var exp = await page.$eval("#prodImgdiv1 > div", (el)=>el.innerHTML)
     res.send(exp);
   } catch (err) {
     console.error(err);

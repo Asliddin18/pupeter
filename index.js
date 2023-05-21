@@ -2,13 +2,11 @@ const app = require("express")();
 const puppeteer=require("puppeteer")
 var express = require('express');
 const cheerio = require("cheerio")
-const { default:axios } = require("axios");
+const { default: axios } = require("axios");
 var cors = require('cors');
 const upload = require("express-fileupload")
-const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(upload())
-app.use(express.static('public'));
 let chrome = {};
 let puppeteer;
 
@@ -18,8 +16,7 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
 } else {
   puppeteer = require("puppeteer");
 }
-
-app.get("/product/:category/:minicategory/:padcategory", async (req, res) => {
+/* app.get("/product/:category/:minicategory/:padcategory", async (req, res) => {
   var url = `https://www.diamondsfactory.com/${req.params.category}/${req.params.minicategory}/${req.params.padcategory}?page=${req.quary.number}`
   const { data } = await axios({
       method: 'GET',
@@ -164,7 +161,7 @@ app.get('/page/:category', async (req, res) => {
       }
   })
   res.status(200).send(`${a}`)
-})
+}) */
 
 
 app.post("/api", async (req, res) => {

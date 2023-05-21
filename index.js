@@ -1,6 +1,5 @@
 const app = require("express")();
 const puppeteer=require("puppeteer")
-var express = require('express');
 const cheerio = require("cheerio")
 const { default: axios } = require("axios");
 var cors = require('cors');

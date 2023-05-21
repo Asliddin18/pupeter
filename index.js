@@ -26,7 +26,7 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage(); 
-    await page.goto(req.params.pages);
+    await page.goto(req.query.pages);
     await page.waitForSelector("#prodImgdiv1")
     var exp = await page.$eval("#prodImgdiv1" , (el)=>el.innerHTML)
     res.status(200).send(exp)

@@ -34,7 +34,7 @@ app.get("/api", async (req, res) => {
     await page.goto(req.query.pages);
     await page.waitForSelector("#product-product > div.containerSticky")
     var exp = await page.$eval("#product-product > div.containerSticky" , (el)=>el.innerHTML)
-    res.status(200).json({ pages:(JSON.stringify(exp).replaceAll("888-888-3959", "+7 965 222 44 22")) })
+    res.status(200).json({ pages:JSON.stringify(exp) })
   } catch (err) {
     console.error(err);
     return null;

@@ -1,5 +1,14 @@
 const app = require("express")();
-
+const puppeteer=require("puppeteer")
+var express = require('express');
+const cheerio = require("cheerio")
+const { default:axios } = require("axios");
+var cors = require('cors');
+const upload = require("express-fileupload")
+const PORT = process.env.PORT || 5000
+app.use(cors())
+app.use(upload())
+app.use(express.static('public'));
 let chrome = {};
 let puppeteer;
 
@@ -10,7 +19,155 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   puppeteer = require("puppeteer");
 }
 
-app.get("/api", async (req, res) => {
+app.get("/product/:category/:minicategory/:padcategory", async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}/${req.params.minicategory}/${req.params.padcategory}?page=${req.quary.number}`
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.middle-container div.categoryDiv2"
+  var a = []
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+      $(item).children().each((index, data) => {
+          var pushdata = JSON.parse($(data).attr().onclick.slice(15, -2))
+                      var d=$(data, "div.showbox").html()
+          var b=d.indexOf('class="sale-label">SALE</div>\n<a')
+   
+
+          var t=d.indexOf('tabindex="1" class="catLink"')
+      
+          var y=d.slice(0,b+33)+d.slice(t)
+          pushdata.code = `${y}`
+          pushdata.img = $(data).find('img').attr("src")
+          a.push(pushdata)
+      }
+      )
+  })
+  
+  res.status(200).send(a)
+
+
+})
+app.get("/product/:category/:minicategory", async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}/${req.params.minicategory}?page=${req.query.number}`
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.middle-container div.categoryDiv2"
+  var a = []
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+      $(item).children().each((index, data) => {
+          var pushdata = JSON.parse($(data).attr().onclick.slice(15, -2))
+                      var d=$(data, "div.showbox").html()
+          var b=d.indexOf('class="sale-label">SALE</div>\n<a')
+   
+
+          var t=d.indexOf('tabindex="1" class="catLink"')
+      
+          var y=d.slice(0,b+33)+d.slice(t)
+          pushdata.code = `${y}`
+          pushdata.img = $(data).find('img').attr("src")
+          a.push(pushdata)
+      }
+      )
+  })
+ 
+  res.status(200).send(a)
+
+
+})
+
+app.get("/product/:category", async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}?page=${req.query.number}`
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.middle-container div.categoryDiv2"
+  var a = []
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+      $(item).children().each((index, data) => {
+          var pushdata = JSON.parse($(data).attr().onclick.slice(15, -2))
+          var d=$(data, "div.showbox").html()
+          var b=d.indexOf('class="sale-label">SALE</div>\n<a')
+   
+
+          var t=d.indexOf('tabindex="1" class="catLink"')
+      
+          var y=d.slice(0,b+33)+d.slice(t)
+          pushdata.code = `${y}`
+          pushdata.img = $(data).find('img').attr("src")
+          a.push(pushdata)
+      }
+      )
+  })
+ 
+  res.status(200).send(a)
+
+
+})
+app.get('/page/:category/:minicategory', async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}/${req.params.minicategory}`
+  var a = 0
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.row.row-compact div.col-sm-12.col-xs-12.text-center div.pagination div.links a.paginationlink"
+
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+    
+      if ($(item).text().length <= 3) {
+          a = $(item).text()
+      }
+  })
+  res.status(200).send(`${a}`)
+})
+
+app.get('/page/:category/:minicategory/:padcategory', async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}/${req.params.minicategory}/${req.params.padcategory}`
+  var a = 0
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.row.row-compact div.col-sm-12.col-xs-12.text-center div.pagination div.links a.paginationlink"
+
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+    
+      if ($(item).text().length <= 3) {
+          a = $(item).text()
+      }
+  })
+  res.status(200).send(`${a}`)
+})
+app.get('/page/:category', async (req, res) => {
+  var url = `https://www.diamondsfactory.com/${req.params.category}`
+  var a = 0
+  const { data } = await axios({
+      method: 'GET',
+      url: url
+  })
+  var select = "div.row.row-compact div.col-sm-12.col-xs-12.text-center div.pagination div.links a.paginationlink"
+
+  const $ = cheerio.load(data)
+  $(select).each((index, item) => {
+      
+      if ($(item).text().length <= 3) {
+          a = $(item).text()
+      }
+  })
+  res.status(200).send(`${a}`)
+})
+
+
+app.post("/api", async (req, res) => {
   let options = {};
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
@@ -27,7 +184,7 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.diamondsfactory.com/design/white-gold-round-diamond-engagement-ring-clrn34901");
+    await page.goto(req.body.pages);
     await page.waitForSelector("#prodImgdiv1 > div")
     var exp = await page.$eval("#prodImgdiv1 > div", (el)=>el.innerHTML)
     res.send(exp);
@@ -41,22 +198,5 @@ app.listen(process.env.PORT || 3000, () => {
   console.log("Server started");
 });
 
+
 module.exports = app;
-/* app.post('/category', async (req,res)=>{
-  try{
-  console.log("test");
-const browser = await puppeteer.launch({ headless:true,args:['--no-sandbox']});
-const page = await browser.newPage();
-var page2='#page-heading'
-await page.goto(req.body.pages);
-await page.waitForSelector(page2)
-var exp=await page.$eval(page2, (el)=>el.innerHTML)
-await browser.close();
-res.status(200).send(exp)
-}catch(err){
-  console.log("test2");
-  const browser = await puppeteer.launch({
-      headless:true,args:['--no-sandbox']
-});
-}
-}) */

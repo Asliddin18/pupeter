@@ -10,7 +10,7 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   puppeteer = require("puppeteer");
 }
 
-app.get("/api/:pages", async (req, res) => {
+app.get("/api", async (req, res) => {
   let options = {};
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
@@ -25,7 +25,7 @@ app.get("/api/:pages", async (req, res) => {
   try {
     let browser = await puppeteer.launch(options);
 
-    let page = await browser.newPage();
+    let page = await browser.newPage(); 
     await page.goto(req.params.pages);
     await page.waitForSelector("#prodImgdiv1")
     var exp = await page.$eval("#prodImgdiv1" , (el)=>el.innerHTML)

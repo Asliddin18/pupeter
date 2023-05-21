@@ -1,10 +1,11 @@
 const app = require("express")();
-
 const cheerio = require("cheerio")
 const { default:axios } = require("axios");
+const cors = require("cors")
+
 let chrome = {};
 let puppeteer;
-
+app.use(cors())
 
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {

@@ -32,8 +32,8 @@ app.get("/api", async (req, res) => {
 
     let page = await browser.newPage(); 
     await page.goto(req.query.pages);
-    await page.waitForSelector("#product-product > div.containerSticky")
-    var exp = await page.$eval("#product-product > div.containerSticky" , (el)=>el.innerHTML)
+    await page.waitForSelector("body > div.body-wrapper")
+    var exp = await page.$eval("body > div.body-wrapper" , (el)=>el.innerHTML)
     res.status(200).json({ pages:JSON.stringify(exp) })
   } catch (err) {
     console.error(err);

@@ -22,13 +22,14 @@ app.get("/api", async (req, res) => {
       ignoreHTTPSErrors: true,
     };
   }
-
   try {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
+    await page.goto("https://www.diamondsfactory.com/design/yellow-gold-heart-halo-diamond-engagement-ring-clrn27109");
+    await page.waitForSelector(req.body.pages)
+    var exp = await page.$eval("#prodImgdiv1" , (el)=>el.innerHTML)
+    res.status(200).send(exp)
   } catch (err) {
     console.error(err);
     return null;

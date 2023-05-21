@@ -1,5 +1,4 @@
 const app = require("express")();
-const puppeteer=require("puppeteer")
 
 let chrome = {};
 let puppeteer;
@@ -28,15 +27,16 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto(req.body.pages);
-    await page.waitForSelector("#prodImgdiv1 > div")
-    var exp = await page.$eval("#prodImgdiv1 > div", (el)=>el.innerHTML)
-    res.send(exp);
+    await page.goto("https://www.google.com");
+    res.send(await page.title());
   } catch (err) {
     console.error(err);
     return null;
   }
 });
 
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server started");
+});
 
 module.exports = app;
